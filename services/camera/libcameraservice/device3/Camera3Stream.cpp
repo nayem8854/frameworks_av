@@ -797,9 +797,10 @@ status_t Camera3Stream::returnBuffer(const camera_stream_buffer &buffer,
     camera_stream_buffer b = buffer;
     if (timestampIncreasing && timestamp != 0 && timestamp <= mLastTimestamp
             && b.status != CAMERA_BUFFER_STATUS_ERROR) {
-        ALOGE("%s: Stream %d: timestamp %" PRId64 " is not increasing. Prev timestamp %" PRId64,
+        ALOGW("%s: Stream %d: timestamp %" PRId64 " is not increasing. Prev timestamp %" PRId64 " (tolerated for multi-frame captures)",
                 __FUNCTION__, mId, timestamp, mLastTimestamp);
-        b.status = CAMERA_BUFFER_STATUS_ERROR;
+        // Do not mark error: OPPO multi-frame captures return decreasing timestamps
+        // b.status = CAMERA_BUFFER_STATUS_ERROR;
     }
     mLastTimestamp = timestamp;
 
